@@ -29,6 +29,7 @@ public class Demo {
     private JLabel curLabel;
     private JButton btnNewButton;
     private JButton btnSaveState;
+    private JButton btnLoadState;
 
     private String selectedListObject;
 
@@ -37,6 +38,7 @@ public class Demo {
     // State Fields
     private Color color;
     private int size;
+    
     
     public Demo(Caretaker c) {
         demo = this;
@@ -105,7 +107,7 @@ public class Demo {
 
         textDisplay = new JLabel("textDisplay");
         textDisplay.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        textDisplay.setBounds(188, 12, 158, 42);
+        textDisplay.setBounds(188, 12, 403, 42);
         frame.getContentPane().add(textDisplay);
     }
 
@@ -133,11 +135,11 @@ public class Demo {
 
     private void renderObjects(){
 
-        list.setBounds(20, 111, 571, 450);
+        list.setBounds(20, 145, 571, 416);
         frame.getContentPane().add(list);
 
         btnNewButton = new JButton("Randomize State");
-        btnNewButton.setBounds(20, 65, 273, 30);
+        btnNewButton.setBounds(20, 104, 571, 30);
         btnNewButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -149,17 +151,29 @@ public class Demo {
         frame.getContentPane().add(btnNewButton);
 
         btnSaveState = new JButton("Save State");
-        btnSaveState.setBounds(318, 65, 273, 30);
+        btnSaveState.setBounds(20, 63, 273, 30);
         btnSaveState.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String currTime = "" + System.currentTimeMillis();
                 model.addElement(currTime);
+                list.setModel(model);
                 caretaker.addMemento(currTime, demo);
             }
         });
 
         frame.getContentPane().add(btnSaveState);
+        
+        btnLoadState = new JButton("Load State");
+        btnLoadState.setBounds(318, 63, 273, 30);
+        frame.getContentPane().add(btnLoadState);
+        btnLoadState.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                restore();
+            }
+        });
+
     }
 
     public Color getColor() {
