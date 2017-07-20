@@ -25,7 +25,8 @@ public class Demo {
     private JLabel textDisplay;
     
     private DefaultListModel<String> model;
-    private JList list;
+    @SuppressWarnings("rawtypes")
+	private JList list;
     
     private JLabel curLabel;
     private JButton btnNewButton;
@@ -35,10 +36,14 @@ public class Demo {
     private String selectedListObject;
 
     private Caretaker caretaker;
-
+    
+    private static final Color[] COLORLIST = {Color.BLACK, Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.GRAY, Color.GREEN, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.RED, Color.YELLOW};
+    
     // State Fields
     private Color color;
     private int size;
+    private int counter;
+    private String displayText;
     
     
     public Demo(Caretaker c) {
@@ -47,10 +52,11 @@ public class Demo {
         initalize();
         color = Color.black;
         size = 12;
+        counter = 0;
+        displayText = "textDisplay";
         setTextDisplay();
     }
 
-    @SuppressWarnings("unchecked")
 	private void initalize() {
 
 		generateFrame();
@@ -59,44 +65,28 @@ public class Demo {
         renderObjects();
     }
 
-    /*
-    private void sync() {
-    	textDisplay.setText("Color: " + textDisplay.getForeground() + " Size: "+textDisplay.getSize());
-    }
-    */
-
+	//Randomize a new State for textDisplay.
     private void randomize(){
-        int colorint = new Random().nextInt(4);
-        size = new Random().nextInt(100);
-        switch (colorint) {
-            case 0:
-                color = Color.BLACK;
-                break;
-            case 1:
-                color = Color.RED;
-                break;
-            case 2:
-                color = Color.BLUE;
-                break;
-            case 3:
-                color = Color.GREEN;
-                break;
-            default:
-                color = Color.YELLOW;
-        }
+        size = new Random().nextInt(37);
+        color = COLORLIST[new Random().nextInt(COLORLIST.length - 1)];
+        displayText = "Randomized State " + counter;
+        setTextDisplay();
+        counter++;
+    }
+    
+    //Restore a state from Memento using HashTable
+    private void restore() {
+        Memento tempento = caretaker.getMomento(selectedListObject);
+        color = tempento.getColorState();
+        size = tempento.getSizeState();
+        displayText = "Saved State";
         setTextDisplay();
     }
 
     private void setTextDisplay(){
         textDisplay.setFont(new Font("Tahoma", Font.BOLD, size));
+        textDisplay.setText(displayText);
         textDisplay.setForeground(color);
-    }
-
-    private void restore() {
-        Memento tempento = caretaker.getMomento(selectedListObject);
-        color = tempento.getColorState();
-        size = tempento.getSizeState();
-        setTextDisplay();
     }
 
     private void generateFrame(){
@@ -121,7 +111,8 @@ public class Demo {
         frame.getContentPane().add(textDisplay);
     }
 
-    private void generateList(){
+    @SuppressWarnings({ "unchecked", "rawtypes", "serial" })
+	private void generateList(){
         model = new DefaultListModel<String>();
         list = new JList(model);
         list.setModel(new AbstractListModel() {
@@ -163,7 +154,8 @@ public class Demo {
         btnSaveState = new JButton("Save State");
         btnSaveState.setBounds(20, 63, 273, 30);
         btnSaveState.addActionListener(new ActionListener() {
-            @Override
+            @SuppressWarnings("unchecked")
+			@Override
             public void actionPerformed(ActionEvent e) {
                 String currTime = "" + System.currentTimeMillis();
                 model.addElement(currTime);
@@ -180,7 +172,9 @@ public class Demo {
         btnLoadState.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                restore();
+            	if (selectedListObject != null) {
+            		restore();
+            	}
             }
         });
 
