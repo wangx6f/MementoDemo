@@ -1,81 +1,121 @@
 package cpp.edu.cs356.demo;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
 import java.util.Random;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
+import java.awt.Font;
 
-public class Demo extends JFrame {
+import javax.swing.JButton;
 
-    JLabel textLabel;
+public class Demo {
 
-    Text text;
+	private JFrame frame;
+    private JLabel textDisplay;
+    
+    private DefaultListModel<String> model;
+    private JList list;
+    
+    private JLabel curLabel;
+    private JButton btnNewButton;
+    private JButton btnSaveState;
 
-    public static void main(String[] args)
-    {
-        Demo demo = new Demo();
-        demo.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-    }
-
+    private String selectedMemento;
+    
     public Demo()
     {
-        init();
-        setSize(400,100);
-        setVisible(true);
-
+    	initalize();
     }
 
-    private void init()
+    @SuppressWarnings("unchecked")
+	private void initalize()
     {
-        LayoutManager root = new FlowLayout();
-        Container pane = getContentPane();
-        pane.setLayout(root);
-        textLabel = new JLabel("some text");
-        text = new Text();
-        sync();
-        JButton change = new JButton("Make Change");
-        change.addActionListener(e -> change());
-        JButton undo = new JButton("Undo");
-        undo.addActionListener(e -> {undo();});
-        pane.add(textLabel);
-        pane.add(change);
-        pane.add(undo);
+    	frame = new JFrame();
+		frame.setTitle("MementoDemo");
+		frame.setResizable(false);
+		frame.setBounds(200, 200, 615, 600);
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		curLabel = new JLabel("Current Display: ");
+		curLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		curLabel.setBounds(20, 12, 158, 42);
+		frame.getContentPane().add(curLabel);
+		
+		textDisplay = new JLabel("textDisplay");
+		textDisplay.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		textDisplay.setBounds(188, 12, 158, 42);
+		frame.getContentPane().add(textDisplay);
+		
+		model = new DefaultListModel<String>();
+		list = new JList(model);
+		list.setModel(new AbstractListModel() {
+			String[] values = new String[] {};
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+		
+        list.addListSelectionListener(new ListSelectionListener() {
 
+            @Override
+            public void valueChanged(ListSelectionEvent arg0) {
+                selectedMemento = list.getSelectedValue().toString();
+            }
+        });
+		
+		list.setBounds(20, 111, 571, 450);
+		frame.getContentPane().add(list);
+		
+		btnNewButton = new JButton("Randomize State");
+		btnNewButton.setBounds(20, 65, 273, 30);
+		frame.getContentPane().add(btnNewButton);
+		
+		btnSaveState = new JButton("Save State");
+		btnSaveState.setBounds(318, 65, 273, 30);
+		frame.getContentPane().add(btnSaveState);
     }
 
 
     private void sync() {
-
-        textLabel.setText("Color: "+text.getColor()+" Size: "+text.getSize());
+    	textDisplay.setText("Color: " + textDisplay.getForeground() + " Size: "+textDisplay.getSize());
     }
 
-    private void change(){
+    private void randomize(){
         int color = new Random().nextInt(4);
         int size = new Random().nextInt(100);
-        text.setSize(size);
-        String colorString;
+        textDisplay.setFont(new Font("Tahoma", Font.BOLD, size));
+        Color colorString;
         switch (color)
         {
             case 0:
-                colorString = "Black";
+                colorString = Color.BLACK;
                 break;
             case 1:
-                colorString = "Red";
+                colorString = Color.RED;
                 break;
             case 2:
-                colorString = "Blue";
+                colorString = Color.BLUE;
                 break;
             case 3:
-                colorString ="Green";
+                colorString = Color.GREEN;
                 break;
             default:
-                colorString ="Yellow";
+                colorString = Color.YELLOW;
         }
-        text.setColor(colorString);
+        textDisplay.setForeground(colorString);
         sync();
     }
 
-    private void undo() {
+    private void restore() {
 
     }
 }
