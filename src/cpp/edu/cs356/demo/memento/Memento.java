@@ -5,9 +5,6 @@ import cpp.edu.cs356.demo.Text;
 
 import java.awt.*;
 
-/**
- * Created by jason on 7/19/17.
- */
 public class Memento {
     private Color color;
     private int size;

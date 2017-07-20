@@ -1,5 +1,6 @@
 package cpp.edu.cs356.demo;
 import cpp.edu.cs356.demo.memento.Caretaker;
+import cpp.edu.cs356.demo.memento.Memento;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -44,6 +45,9 @@ public class Demo {
         demo = this;
     	caretaker = c;
         initalize();
+        color = Color.black;
+        size = 12;
+        setTextDisplay();
     }
 
     @SuppressWarnings("unchecked")
@@ -64,7 +68,6 @@ public class Demo {
     private void randomize(){
         int colorint = new Random().nextInt(4);
         size = new Random().nextInt(100);
-        textDisplay.setFont(new Font("Tahoma", Font.BOLD, size));
         switch (colorint) {
             case 0:
                 color = Color.BLACK;
@@ -81,12 +84,19 @@ public class Demo {
             default:
                 color = Color.YELLOW;
         }
+        setTextDisplay();
+    }
+
+    private void setTextDisplay(){
+        textDisplay.setFont(new Font("Tahoma", Font.BOLD, size));
         textDisplay.setForeground(color);
-        //sync();
     }
 
     private void restore() {
-
+        Memento tempento = caretaker.getMomento(selectedListObject);
+        color = tempento.getColorState();
+        size = tempento.getSizeState();
+        setTextDisplay();
     }
 
     private void generateFrame(){

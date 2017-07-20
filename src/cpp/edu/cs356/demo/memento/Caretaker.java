@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by jason on 7/20/17.
- */
 public class Caretaker {
     private Map<String, Memento> mementoMap;
 
