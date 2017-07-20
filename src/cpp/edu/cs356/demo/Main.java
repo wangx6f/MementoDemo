@@ -1,10 +1,14 @@
 package cpp.edu.cs356.demo;
 
+import cpp.edu.cs356.demo.memento.Caretaker;
+
 public class Main {
 
     public static void main(String[] args)
     {
-        Demo demo = new Demo();
+
+        Caretaker caretaker = new Caretaker();
+        Demo demo = new Demo(caretaker);
 
     }
 	
