@@ -45,6 +45,7 @@ public class Demo extends JFrame {
 
 
     private void sync() {
+
         textLabel.setText("Color: "+text.getColor()+" Size: "+text.getSize());
     }
 
